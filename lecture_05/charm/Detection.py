@@ -15,9 +15,27 @@ while True:
 
         faces = classifier.detectMultiScale(gray)
 
+        areas = []
+
         for face in faces:
             x, y, w, h = face
+            area = w*h
+            areas.append((area, face))
+
+        areas = sorted(areas, reverse=True)
+
+        if len(areas) > 0:
+            face = areas[0][1]
+            x, y, w, h = face
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
+
+            img_face = frame[y:y+h, x:x+w]
+
+            img_face = cv2.resize(img_face, (400, 400))
+
+            shape = img_face.shape
+
+            frame[0:shape[0], 0:shape[1]] = img_face
 
         cv2.imshow("cam", frame)
 
